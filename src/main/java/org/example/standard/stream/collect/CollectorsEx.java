@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.example.selfmade.record.Person;
+import org.example.test.record.Person;
 
 public class CollectorsEx {
     public static void main(String[] args) {
