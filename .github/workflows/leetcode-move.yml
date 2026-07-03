@@ -24,7 +24,11 @@ jobs:
           echo "Current directory contents:"
           ls -la
           
-          mkdir -p leetcode
+          # 목표 경로를 변수로 설정
+          TARGET_DIR="src/main/java/org/example/leetcode"
+          
+          # 해당 경로까지 필요한 모든 폴더를 생성
+          mkdir -p "$TARGET_DIR"
           
           echo "Changed files in this push:"
           git diff --name-only HEAD^ HEAD || true
@@ -32,7 +36,9 @@ jobs:
           found=0
           for d in [0-9][0-9][0-9][0-9]-*; do
             if [ -d "$d" ]; then
-              echo "Moving directory: $d"
+              echo "Moving directory: $d to $TARGET_DIR"
+              # 누락되었던 실제 이동 명령어 추가 및 경로 지정
+              mv "$d" "$TARGET_DIR/" && found=1
             fi
           done
           
@@ -46,7 +52,7 @@ jobs:
             git config --global user.name 'github-actions[bot]'
             git config --global user.email 'github-actions[bot]@users.noreply.github.com'
             git add -A
-            git commit -m "chore: Move LeetCode solutions to leetcode folder"
+            git commit -m "chore: Move LeetCode solutions to src/main/java/org/example/leetcode"
             git push
           else
             echo "No changes to commit"
