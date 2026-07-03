@@ -1,0 +1,53 @@
+name: Move LeetCode Solutions
+
+on:
+  workflow_dispatch:  # 수동 실행 옵션
+  push:
+    paths:
+      - '[0-9][0-9][0-9][0-9]-*/**'  # LeetHub가 생성하는 폴더 패턴
+
+# Action 봇이 리포지토리에 변경사항을 push 하기 위해 필수적인 쓰기 권한
+permissions:
+  contents: write
+
+jobs:
+  move-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # 최신 버전인 v4 사용 권장
+        with:
+          fetch-depth: 2
+
+      - name: Move LeetCode solutions
+        run: |
+          echo "Current directory contents:"
+          ls -la
+          
+          mkdir -p leetcode
+          
+          echo "Changed files in this push:"
+          git diff --name-only HEAD^ HEAD || true
+          
+          found=0
+          for d in [0-9][0-9][0-9][0-9]-*; do
+            if [ -d "$d" ]; then
+              echo "Moving directory: $d"
+            fi
+          done
+          
+          if [ $found -eq 0 ]; then
+            echo "No matching directories found to move"
+          fi
+
+      - name: Commit & Push changes
+        run: |
+          if git status --porcelain | grep .; then
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git add -A
+            git commit -m "chore: Move LeetCode solutions to leetcode folder"
+            git push
+          else
+            echo "No changes to commit"
+          fi
