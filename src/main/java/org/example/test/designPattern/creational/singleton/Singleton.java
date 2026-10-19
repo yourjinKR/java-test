@@ -1,4 +1,4 @@
-package org.example.test.designPattern.singleton;
+package org.example.test.designPattern.creational.singleton;
 
 //  Eager Initialization
 public class Singleton {
